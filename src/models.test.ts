@@ -1,19 +1,19 @@
-import test from "ava";
+import test, { todo } from "ava";
 import { ContactsCollection } from "./models";
 import * as contactsObject from "./contacts.json";
 import * as jsonfile from "jsonfile";
 
 test.serial("Testeo el load del modelo", (t) => {
   const model = new ContactsCollection();
-  model.load();
-  t.deepEqual(contactsObject, model.getAll());
-
-  // si load() es async, este test tiene que cambiar a:
-  // return model.load().then(() => {
-  //   t.deepEqual(contactsObject, model.getAll());
-  // });
-
-  // esto espera a que la promesa se resuelva y corre el test
+  const promesa = model.load();
+  promesa.then(() => {
+    const todosLosDatos = model.getAll()
+    t.deepEqual(contactsObject, todosLosDatos)
+  })
+  promesa.catch(
+    () => { console.log("No se esta ejecutando bien el test de Load()") }
+  )
+  return promesa
 });
 
 test.serial("Testeo el addOne del modelo", (t) => {
@@ -26,20 +26,34 @@ test.serial("Testeo el addOne del modelo", (t) => {
   t.deepEqual(model.getAll(), [mockContact]);
 });
 
+
+
 test.serial("Testeo el save del modelo", (t) => {
   const model = new ContactsCollection();
-  // acá también habría que modificar el test
-  // para que contemple el uso de promesas
-  model.load();
-  const mockContact = {
-    id: 30,
-    name: "Marce",
-  };
-  model.addOne(mockContact);
-  model.save();
-  const fileContent = jsonfile.readFileSync(__dirname + "/contacts.json");
-  t.deepEqual(fileContent, model.getAll());
+  const promesa = model.load();
+  return promesa.then(
+    () => {
+      /// primero llamo a la promesa,  concateno para que primero se ejecute el metodo load y despues de ejecutarse empieze lo que esta dentro de esta
+      /// segundo creo un mock para poder crear un nuevo contacto y lo voy a guarda
+      /// ahora lo agrego y lo guardo
+      /// ahora traigo los contactos guardados y despues lo comparar
+      const mockContact = {
+        id: 222,
+        name: "jimmy",
+      };
+      model.addOne(mockContact);
+
+      const promesa = model.save();
+      return promesa.then(() => {
+        const fileContent = jsonfile.readFileSync(__dirname + "/contacts.json");
+        t.deepEqual(model.getAll(), fileContent)
+      })
+    }
+  )
 });
+
+
+
 
 test.serial("Testeo el getOneById del modelo", (t) => {
   const model = new ContactsCollection();
