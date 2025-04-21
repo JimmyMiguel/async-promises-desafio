@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "ava",
-    "start": "ts-node src/index.ts"
+    "start": "node init && ts-node src/index.ts"
   },
   "ava": {
     "typescript": {
@@ -27,7 +27,9 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "jsonfile": "^6.1.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "node-fetch": "^3.3.2"
   }
 }
