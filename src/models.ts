@@ -1,4 +1,5 @@
 import * as jsonfile from "jsonfile";
+import { ContactsControllerOptions } from "./controllers";
 
 class Contact {
   id?: number = undefined;
@@ -14,9 +15,10 @@ class ContactsCollection {
     promesas.then(
       (json) => {
         this.data = json;
+        return this.data
       }
     )
-    return promesas;
+    return promesas
   }
 
 
@@ -31,12 +33,7 @@ class ContactsCollection {
     return jsonfile.writeFile(__dirname + "/contacts.json", this.data);
   }
   getOneById(id) {
-    const encontrado = this.data.find((contacto) => {
-      if (contacto?.id == id) {
-        return true;
-      }
-    });
-
+    const encontrado = this.data.find((contacto) => contacto?.id == id);
     return encontrado;
   }
 }

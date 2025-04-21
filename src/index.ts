@@ -1,6 +1,6 @@
 import { ContactsCollection } from "./models";
 import { ContactsController, ContactsControllerOptions } from "./controllers";
-import * as minimist from "minimist";
+import minimist from "minimist";
 
 function parseaParams(argv): ContactsControllerOptions {
   const resultado = minimist(argv);
@@ -15,7 +15,12 @@ function main() {
   const controller = new ContactsController();
   const params = parseaParams(process.argv.slice(2));
   const result = controller.processOptions(params);
-  console.log(result);
+  return result.then(
+    (x)=>{
+      console.log(x)
+    }
+  )
+  
 }
 
 main();
